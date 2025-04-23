@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DW CONSULTANCIES - Construction Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0A2647',
+            secondary: '#144272',
+            accent: '#205295',
+            light: '#2C74B3',
+          },
+          fontFamily: {
+            'sans': ['Poppins', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      scroll-behavior: smooth;
+      line-height: 1.4;
+      margin: 0;
+      font-family: 'Poppins', system-ui, sans-serif;
+      box-sizing: border-box;
+      padding-top: constant(safe-area-inset-top);
+      padding-top: env(safe-area-inset-top);
+    }
+
+    *, *::before, *::after {
+      box-sizing: inherit;
+    }
+
+    header {
+      padding-top: env(safe-area-inset-top);
+    }
+
+    /* Mobile Menu */
+    #mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background-color: #0A2647;
+      transition: right 0.3s ease-in-out;
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    #mobile-menu.open {
+      right: 0;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 40;
+      display: none;
+    }
+
+    #overlay.active {
+      display: block;
+    }
+
+    /* Responsive Slideshow */
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      aspect-ratio: 16/9; /* Default for desktop */
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .nav-desktop {
+        display: none;
+      }
+
+      .nav-mobile {
+        display: block;
+      }
+
+      header .w-full.px-4.py-3 {
+        padding-top: 0.25rem !important;
+        padding-bottom: 0.25rem !important;
+      }
+
+      header img {
+        width: 72px !important;
+      }
+
+      header h1 {
+        font-size: 1.25rem !important;
+      }
+
+      .slideshow-container {
+        aspect-ratio: 9/10; /* Taller slideshow for mobile */
+      }
+
+      .slideshow-container .container {
+        margin-top: 8rem !important; /* Lower hero text */
+      }
+    }
+
+    @media (min-width: 769px) {
+      .nav-desktop {
+        display: flex;
+      }
+
+      .nav-mobile {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+<body class="bg-gray-100">
+<!-- Full content restored below this line -->
+<!-- Mobile Menu Overlay -->
+<div id="overlay"></div>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="p-6">
+    <button id="close-mobile-menu" class="absolute top-4 right-4 text-white text-3xl">&times;</button>
+    <div class="flex flex-col space-y-6 mt-16">
+        <a href="#home" class="text-white text-xl hover:text-light">Home</a>
+        <a href="#services" class="text-white text-xl hover:text-light">Services</a>
+        <a href="#projects" class="text-white text-xl hover:text-light">Projects</a>
+        <a href="#team" class="text-white text-xl hover:text-light">Our Team</a>
+        <a href="#careers" class="text-white text-xl hover:text-light">Careers</a>
+        <a href="#contact" class="text-white text-xl hover:text-light">Contact</a>
+        <a href="#quote" class="bg-accent hover:bg-light px-4 py-3 rounded text-white text-xl text-center">Get a Quote</a>
+    </div>
+</div>
+    <!-- Header -->
+    <header class="bg-primary text-white sticky top-0 z-40">
+        <div class="w-full px-4 py-3 flex flex-wrap justify-between items-center">
+
+            <div class="flex items-center">
+                <img src="https://iili.io/3IkTHc7.jpg" alt="DW Consultancies Logo" class="w-24 md:w-32 h-auto rounded-lg mr-4">
+                <h1 class="text-2xl md:text-3xl font-bold uppercase">DW CONSULTANCIES</h1>
+            </div>
+
+            <!-- Desktop Navigation -->
+<nav class="nav-desktop hidden md:flex items-center space-x-3 whitespace-nowrap overflow-x-auto">
+    <a href="#home" class="hover:text-light transition">Home</a>
+    <a href="#services" class="hover:text-light transition">Services</a>
+    <a href="#projects" class="hover:text-light transition">Projects</a>
+    <a href="#team" class="hover:text-light transition">Our Team</a>
+    <a href="#careers" class="hover:text-light transition">Careers</a>
+    <a href="#contact" class="hover:text-light transition">Contact</a>
+    <a href="#quote" class="bg-accent hover:bg-light px-4 py-2 rounded transition whitespace-nowrap">Get a Quote</a>
+</nav>
+
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-toggle" class="ml-auto md:hidden">
+
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section with Slideshow -->
+        <section id="home" class="relative">
+    <div class="slideshow-container">
+        <div class="slide active" style="background-image: url('https://iili.io/3x6QxZG.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-center">
+                <div class="<div class="container px-4 mt-16 md:mt-24">
+
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Your Trusted Partner in Construction Management</h2>
+                    <p class="text-lg md:text-xl mb-6">Delivering excellence in construction management and cost services across the UK</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('https://iili.io/3xPVH2S.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-center">
+                <div class="<div class="container px-4 mt-16 md:mt-24">
+
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Your Trusted Partner in Construction Management</h2>
+                    <p class="text-lg md:text-xl mb-6">Delivering excellence in construction management and cost services across the UK</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('https://iili.io/3x6PVku.png');">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-center">
+                <div class="<div class="container px-4 mt-16 md:mt-24">
+
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Your Trusted Partner in Construction Management</h2>
+                    <p class="text-lg md:text-xl mb-6">Delivering excellence in construction management and cost services across the UK</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('https://iili.io/3x6P01S.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-center">
+                <div class="<div class="container px-4 mt-16 md:mt-24">
+
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Your Trusted Partner in Construction Management</h2>
+                    <p class="text-lg md:text-xl mb-6">Delivering excellence in construction management and cost services across the UK</p>
+                </div>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('https://iili.io/3x6PRmG.jpg');">
+            <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-center">
+                <div class="<div class="container px-4 mt-16 md:mt-24">
+
+                    <h2 class="text-3xl md:text-5xl font-bold mb-4">Your Trusted Partner in Construction Management</h2>
+                    <p class="text-lg md:text-xl mb-6">Delivering excellence in construction management and cost services across the UK</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-12 bg-white text-gray-800">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold text-center mb-8">Our Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Construction Management</h3>
+                <p>Comprehensive oversight and coordination for your construction projects, ensuring smooth execution from start to finish.</p>
+            </div>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Cost Consultancy</h3>
+                <p>Expert financial guidance to keep your project within budget while maintaining quality standards.</p>
+            </div>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Project Planning</h3>
+                <p>Detailed project planning and scheduling to optimize resource allocation and ensure timely completion.</p>
+            </div>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Procurement Management</h3>
+                <p>Strategic sourcing and procurement to secure the best materials and contractors for your project.</p>
+            </div>
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4">Risk Management</h3>
+                <p>Proactive identification and mitigation of potential risks to keep your project on track.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="py-12 bg-gray-100">
+  <div class="container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-12">Our Projects</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Post-Contract Projects -->
+      <div class="bg-white rounded-2xl shadow-md overflow-hidden col-span-1 lg:col-span-2">
+        <img src="https://iili.io/3Ga43TN.png" alt="Post-Contract Projects" class="w-full h-48 object-cover">
+        <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Left: Summary + Scope -->
+          <div>
+            <h3 class="text-xl font-semibold mb-3">Post-Contract Projects</h3>
+            <p class="text-gray-600 text-sm mb-4">
+              We specialise in delivering robust support throughout the post-contract phase to ensure efficient execution and completion. Our team manages <strong>dispute resolution</strong>, <strong>construction phase project management</strong>, <strong>liaison with authorities</strong>, and oversees <strong>resource handling</strong> and <strong>site supervision</strong> for quality assurance.
+            </p>
+            <p class="text-gray-600 text-sm mb-2">Scope of Work:</p>
+            <ul class="list-disc list-inside text-gray-700 text-sm space-y-1">
+              <li>Dispute Resolution</li>
+              <li>Construction Phase Project Management</li>
+              <li>Liaising with authorities</li>
+              <li>Taking off using Bluebeam</li>
+              <li>Managing resources</li>
+              <li>Procurement handling</li>
+              <li>Project monitoring and controlling</li>
+              <li>Site handling</li>
+            </ul>
+          </div>
+
+          <!-- Right: Project List -->
+          <div>
+            <h3 class="text-m font-semibold mb-3">Key Projects</h3>
+            <ul class="list-disc list-inside text-gray-700 text-sm space-y-1">
+              <li>159 High Street Harrow Apartments – £19m</li>
+              <li>Schwarzman Centre, Oxford – £150m (Feb 2024)</li>
+              <li>Alexander Stadium Fit-out – £6m (Sep 2023)</li>
+              <li>Goldman Sachs Office – £14m (Aug 2023–Feb 2024)</li>
+              <li>Tanworth Lane Redevelopment – £1.6m (Jul 2023–Sep 2024)</li>
+              <li>Arup Head Office – £15m (Apr–Nov 2023)</li>
+              <li>Nebsworth Close Redevelopment – £1.3m (Jun 2022–Aug 2023)</li>
+              <li>Commonwealth Games Dev. – £72m (Feb 2021–Jun 2023)</li>
+              <li>Biochemistry Phase 2 – £45m (Sep 2019–Feb 2021)</li>
+              <li>Metro Bank, Solihull – £1.2m (Apr–Sep 2019)</li>
+              <li>Jaguar Land Rover, Gaydon – £200m (2018–2019)</li>
+              <li>DNRC, Loughborough – £315m (2016–2018)</li>
+              <li>Ingenuity House, Birmingham – £47m (2016)</li>
+              <li>Study Inn, Cambridge – £16m (2016)</li>
+              <li>CTI, Sheffield – (2015–2016)</li>
+              <li>De Montfort Univ., Leicester – (2015)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pre-Contract Projects -->
+      <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+        <img src="https://iili.io/3TxQYX9.webp" alt="Pre-Contract Projects" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold mb-2">Pre-Contract Projects</h3>
+          <p class="text-gray-600 text-sm mb-4">
+            Supported a range of <strong>residential</strong>, <strong>commercial</strong>, <strong>high-rise</strong>, <strong>railway</strong> and <strong>government</strong> projects across the UK.
+          </p>
+          <p class="text-gray-600 text-sm mb-2">Scope of Work:</p>
+          <ul class="list-disc list-inside text-gray-700 text-sm space-y-1 mb-4">
+            <li>BOQ preparation</li>
+            <li>Project pricing and estimation</li>
+            <li>Project planning and scheduling</li>
+            <li>Taking off using Bluebeam/manual</li>
+          </ul>
+          <p class="text-gray-600 text-sm mb-2">Key Projects:</p>
+          <ul class="list-disc list-inside text-gray-700 text-sm columns-2 gap-4">
+            <li>Leicester City Council</li>
+            <li>Brunel Engineer Shed Buckingham</li>
+            <li>KSF Global</li>
+            <li>Argos Swansea</li>
+            <li>Alexander Stadium</li>
+            <li>Highland Road Bromley</li>
+            <li>Holland Park</li>
+            <li>Newport SCDP</li>
+            <li>Lower Farm</li>
+            <li>Stoddart Bridges</li>
+            <li>1 Manor House Drive Northwood</li>
+            <li>146 Hainault Road</li>
+            <li>174 Swithland Lane</li>
+            <li>Daisey Hill</li>
+            <li>C2211 Bury Park CRC</li>
+            <li>Glasgow Unite</li>
+            <li>Manston Gardens</li>
+            <li>Southend Plaza</li>
+            <li>Glyn Vale Bristol</li>
+            <li>Hospice Shop Sussex</li>
+            <li>Liskeard, Totnes, Truro, Torquay Bath, Barnstable Refurbishments</li>
+            <li>London Road Stockton Heath</li>
+            <li>Middlesborough Station</li>
+            <li>Hereford & Llanelli Station</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
+        <!-- Staff Section -->
+        <section id="team" class="py-12 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-3xl font-bold text-center mb-8">Our Team</h2>
+                <div class="flex flex-wrap justify-center gap-8">
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center w-80">
+                        <img src="https://iili.io/3GaKo1s.jpg" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Keshan Dickwella</h3>
+                        <h3 class="text-sm font-semibold mb-2">BEng (Hons) MSc MCIOB</h3>
+                        <p class="text-gray-600">Managing Director/ Senior Project Manager</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center w-80">
+                        <img src="https://iili.io/3R014lp.png" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Hansi Jayasinghe</h3>
+                        <h3 class="text-sm font-semibold mb-2">B.Sc. (Hons) in Quantity Surveying (Salford)</h3>
+                        <p class="text-gray-600">Senior Quantity Surveyor</p>
+                    </div>
+		    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center w-80">
+                        <img src="https://iili.io/3R0Ms5B.png" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Janaka Ravindra</h3>
+                        <h3 class="text-sm font-semibold mb-2">B.Sc. in Mechanical Engineering</h3>
+                        <p class="text-gray-600">Project Manager</p>
+                    </div>
+		    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center w-80">
+                        <img src="https://iili.io/3R0Ms5B.png" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Nadeeja Juniyas</h3>
+                        <h3 class="text-sm font-semibold mb-2">B.Sc. (Civil Engineering)|MSc Construction Project Management|(CSCS, UK),(CITB,UK)</h3>
+                        <p class="text-gray-600">Site Engineer</p>
+                    </div>
+		    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center w-80">
+                        <img src="https://iili.io/3R0Ms5B.png" alt="Team Member" class="w-32 h-32 rounded-full mx-auto mb-4">
+                        <h3 class="text-xl font-semibold mb-2">Thilakshana Alwis</h3>
+                        <h3 class="text-sm font-semibold mb-2">B.Sc. (Hons) in Quantity Surveying (Salford)</h3>
+                        <p class="text-gray-600">Quantity Surveyor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Careers Section -->
+        <section id="careers" class="py-12 bg-gray-100">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-8">Join Our Team</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold">Quantity Surveyor/Estimator (Pre-Contract)</h3>
+                        <p class="text-gray-700 mb-4">
+                            We are currently seeking an experienced Pre-Contract Quantity Surveyor to join our team. The ideal candidate will have a solid background in pre-contract cost estimation, BOQ preparation, and tender documentation within the UK construction industry. A minimum of 3 years’ experience specifically in pre-contract Quantity Surveying is required. If you have a keen eye for detail and a strong understanding of UK construction standards and procurement practices, we’d love to hear from you.
+                        </p>
+                        <a href="https://script.google.com/macros/s/AKfycbzqeolqiML8PxcfgEsNe6FmP8N8ihbCQS7vCxnR7-8xE8ca27EXLYiK-L5VTofZtSbtgA/exec" target="_blank" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition inline-block">
+                            Apply Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Get a Quote Section -->
+        <section id="quote" class="py-12 bg-secondary text-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-8 text-center">Get a Quote from Us</h2>
+                <form id="quoteForm" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-800">
+                    <div class="mb-4">
+                        <label for="name" class="block mb-2">Full Name</label>
+                        <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block mb-2">Email</label>
+                        <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="phone" class="block mb-2">Phone</label>
+                        <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="projectName" class="block mb-2">Project Name</label>
+                        <input type="text" id="projectName" name="projectName" class="w-full px-3 py-2 border rounded" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="projectDetails" class="block mb-2">Project Details</label>
+                        <textarea id="projectDetails" name="projectDetails" rows="8" class="w-full px-3 py-2 border rounded" required placeholder="Briefly explain about your project and services you expect from us"></textarea>
+                   
+                    <div class="w-full h-5 bg-gray-200 rounded-full mb-4 hidden" id="progressBarContainer">
+                        <div id="progressBar" class="h-full bg-blue-600 rounded-full text-white text-sm text-center leading-5" style="width: 0%">0%</div>
+                    </div>
+                    <button id="submitBtn" type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition w-full">
+                        Submit Quote Request
+                    </button>
+                </form>
+                <p id="formStatus" class="text-center mt-4 text-sm"></p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-12 bg-secondary text-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold mb-8 text-center">Contact Us</h2>
+                <div class="flex flex-wrap justify-center">
+                    <div class="w-full md:w-1/3 text-center mb-8 md:mb-0">
+                        <h3 class="text-xl font-bold mb-2">Address</h3>
+                        <p>17 Padside Row, Hamilton</p>
+                        <p>Leicester, LE5 1WA</p>
+                    </div>
+                    <div class="w-full md:w-1/3 text-center mb-8 md:mb-0">
+                        <h3 class="text-xl font-bold mb-2">Phone</h3>
+                        <p>+447414481840</p>
+                    </div>
+                    <div class="w-full md:w-1/3 text-center">
+                        <h3 class="text-xl font-bold mb-2">Email</h3>
+                        <p>info@dwconsultancies.com</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white text-secondary py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 DW Consultancies. All rights reserved. Subsidiary of DW Engineering Co. Ltd (Company No. 09315643)</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('quoteForm');
+            const progress = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressBarContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            const statusText = document.getElementById('formStatus');
+
+            function updateProgress(percent, color = 'bg-blue-600', text = '') {
+                progress.style.width = percent + '%';
+                progress.className = `h-full ${color} rounded-full text-white text-sm text-center leading-5 transition-all duration-500`;
+                progress.textContent = text || `${percent}%`;
+            }
+
+            function animateProgress(targetPercent, duration = 1000, finalColor = 'bg-blue-600', finalText = '') {
+                let startPercent = 0;
+                const increment = 1;
+                const interval = duration / (targetPercent / increment);
+
+                const animation = setInterval(() => {
+                    startPercent += increment;
+                    updateProgress(startPercent);
+
+                    if (startPercent >= targetPercent) {
+                        clearInterval(animation);
+                        if (finalColor !== 'bg-blue-600' || finalText) {
+                            updateProgress(targetPercent, finalColor, finalText);
+                        }
+                    }
+                }, interval);
+            }
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                progressContainer.classList.remove('hidden');
+                submitBtn.disabled = true;
+                submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                statusText.textContent = '';
+                updateProgress(0);
+                animateProgress(30);
+
+                const formData = new FormData(form);
+                const encoded = new URLSearchParams(formData);
+
+                try {
+                    setTimeout(() => animateProgress(60), 1000);
+
+                    const res = await fetch("https://script.google.com/macros/s/AKfycbxzQctqHOGAcPzCuL0pHuxUHMY-c5-yXvrkmUc0mWh4u7m07p5LU0svQFNpqs4lpyvs/exec", {
+                        method: 'POST',
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: encoded
+                    });
+
+                    const text = await res.text();
+
+                    if (text.includes("Success")) {
+                        animateProgress(100, 800, 'bg-green-600', '100%');
+                        statusText.textContent = "✅ Submission successful! One of our team members will get in touch with you within the next two working days";
+                        statusText.className = 'text-green-600 text-center mt-4 text-sm';
+                        form.reset();
+                        setTimeout(() => progressContainer.classList.add('hidden'), 3000);
+                    } else {
+                        throw new Error(text);
+                    }
+                } catch (err) {
+                    animateProgress(100, 500, 'bg-red-600', 'Error');
+                    statusText.textContent = "❌ Submission failed. Please try again.";
+                    statusText.className = 'text-red-600 text-center mt-4 text-sm';
+                } finally {
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }, 1500);
+                }
+            });
+
+            // Mobile Menu Toggle Script
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('overlay');
+            const closeMobileMenu = document.getElementById('close-mobile-menu');
+            const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
+
+            function toggleMobileMenu() {
+                mobileMenu.classList.toggle('open');
+                overlay.classList.toggle('active');
+            }
+
+            mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            closeMobileMenu.addEventListener('click', toggleMobileMenu);
+            overlay.addEventListener('click', toggleMobileMenu);
+
+            // Close menu when a link is clicked
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', toggleMobileMenu);
+            });
+
+            // Slideshow Functionality
+            function initSlideshow() {
+                const slides = document.querySelectorAll('.slide');
+                let currentSlide = 0;
+
+                function nextSlide() {
+                    slides[currentSlide].classList.remove('active');
+                    currentSlide = (currentSlide + 1) % slides.length;
+                    slides[currentSlide].classList.add('active');
+                }
+
+                setInterval(nextSlide, 5000); // Change slide every 5 seconds
+            }
+
+            initSlideshow();
+        });
+    </script>
+</body>
+</html>
