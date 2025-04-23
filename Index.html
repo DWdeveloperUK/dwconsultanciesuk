@@ -433,157 +433,106 @@
             </div>
         </section>
 
-        <!-- Get a Quote Section -->
-<section id="quote" class="py-12 bg-secondary text-white">
-  <div class="container mx-auto px-6">
-    <h2 class="text-3xl font-bold mb-8 text-center">Get a Quote from Us</h2>
-    <form id="quoteForm" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg text-gray-800">
-      <div class="mb-4">
-        <label for="name" class="block mb-2">Full Name</label>
-        <input type="text" id="name" name="name" class="w-full px-3 py-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="email" class="block mb-2">Email</label>
-        <input type="email" id="email" name="email" class="w-full px-3 py-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="phone" class="block mb-2">Phone</label>
-        <input type="tel" id="phone" name="phone" class="w-full px-3 py-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="projectName" class="block mb-2">Project Name</label>
-        <input type="text" id="projectName" name="projectName" class="w-full px-3 py-2 border rounded" required>
-      </div>
-      <div class="mb-4">
-        <label for="projectDetails" class="block mb-2">Project Details</label>
-        <textarea id="projectDetails" name="projectDetails" rows="8" class="w-full px-3 py-2 border rounded" required></textarea>
-      </div>
-      <div class="mb-4">
-        <label class="block mb-2">Attach Drawings and Documents (PDF Only. Maximum TOTAL file size allowed is 1GB.)</label>
-        <button type="button" onclick="openPicker()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Choose File</button>
-        <p id="fileInfo" class="mt-2 text-sm text-green-700"></p>
-        <input type="hidden" name="driveFileId" id="driveFileId">
-        <input type="hidden" name="driveFileName" id="driveFileName">
-      </div>
-      <div class="w-full h-5 bg-gray-200 rounded-full mb-4 hidden" id="progressBarContainer">
-        <div id="progressBar" class="h-full bg-blue-600 rounded-full text-white text-sm text-center leading-5" style="width: 0%">0%</div>
-      </div>
-      <button id="submitBtn" type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 transition w-full">Submit Quote Request</button>
-    </form>
-    <p id="formStatus" class="text-center mt-4 text-sm"></p>
-  </div>
-</section>
+        const FOLDER_ID = "1CLMKWZahhxPiQ0qvR0lB3PI3tDcQB6pK";
+const SPREADSHEET_NAME = "Quote Submissions Summary";
 
-<!-- Picker API Script -->
-<script>
-  function onApiLoad() {
-    gapi.load('client:auth2', () => {});
-    gapi.load('picker', () => {});
-  }
-</script>
-<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+function doPost(e) {
+  try {
+    const data = e.parameter;
+    const timestamp = new Date().toLocaleString();
 
-<script>
-  let oauthToken;
-  function openPicker() {
-  gapi.load('client:auth2', () => {
-    gapi.auth2.init({
-      client_id: '232026509988-4td7g9go13ihu7ndv64saeceovj8ef6n.apps.googleusercontent.com',
-      scope: 'https://www.googleapis.com/auth/drive.file'
-    }).then(() => {
-      const authInstance = gapi.auth2.getAuthInstance();
-      authInstance.signIn().then(user => {
-        oauthToken = user.getAuthResponse().access_token;
-        createPicker();
-      });
+    const clientName = data.name.trim().replace(/\s+/g, '');
+    const projectName = data.projectName.trim().replace(/\s+/g, '');
+    const subFolderName = `${projectName}_${clientName}`;
+    const transcriptFileName = `${projectName}_Transcript.pdf`;
+    const drawingFolderName = `${projectName}_Files`;
+
+    const parentFolder = DriveApp.getFolderById(FOLDER_ID);
+    const mainFolder = getOrCreateFolder(parentFolder, subFolderName);
+    const filesFolder = getOrCreateFolder(mainFolder, drawingFolderName);
+
+    // Move file from user's Drive to the structured folder
+    const fileId = data.driveFileId;
+    const file = DriveApp.getFileById(fileId);
+    const copiedFile = file.makeCopy(data.driveFileName, filesFolder);
+
+    // Create transcript PDF
+    const docContent =
+      `Client Name: ${data.name}\n` +
+      `Email: ${data.email}\n` +
+      `Phone: ${data.phone}\n` +
+      `Project Name: ${data.projectName}\n` +
+      `Project Details:\n${data.projectDetails}\n` +
+      `Submitted At: ${timestamp}\n\n` +
+      `Drawing File: ${copiedFile.getUrl()}\n` +
+      `Drive Folder: ${mainFolder.getUrl()}`;
+
+    const doc = DocumentApp.create(`${projectName}_Transcript`);
+    doc.getBody().setText(docContent);
+    doc.saveAndClose();
+
+    const docFile = DriveApp.getFileById(doc.getId());
+    const pdfBlob = docFile.getAs(MimeType.PDF).setName(transcriptFileName);
+    mainFolder.createFile(pdfBlob);
+    DriveApp.getRootFolder().removeFile(docFile); // Cleanup
+
+    // Log into spreadsheet
+    const sheetFile = findOrCreateSheet(parentFolder);
+    const sheet = sheetFile.getSheets()[0];
+    sheet.appendRow([
+      timestamp,
+      data.name,
+      data.email,
+      data.phone,
+      data.projectName,
+      data.projectDetails,
+      copiedFile.getUrl(),
+      mainFolder.getUrl()
+    ]);
+
+    // Email setup
+    const subject = `New Quote Request from ${data.name} for ${data.projectName}`;
+    const body =
+      `📩 A new quote request has been submitted.\n\n` +
+      `👤 Name: ${data.name}\n` +
+      `📧 Email: ${data.email}\n` +
+      `📞 Phone: ${data.phone}\n` +
+      `🏗️ Project Name: ${data.projectName}\n\n` +
+      `📝 Project Details:\n${data.projectDetails}\n\n` +
+      `📂 Drive Folder: ${mainFolder.getUrl()}\n` +
+      `📎 Uploaded File: ${copiedFile.getUrl()}\n` +
+      `🕒 Submitted At: ${timestamp}`;
+
+    MailApp.sendEmail({
+      to: "info@dwconsultancies.com",
+      cc: "thilakshana@dwconsultancies.com,hansi@dwconsultancies.com",
+      subject: subject,
+      body: body,
+      name: "Client Inquiry Management System"
     });
-  });
+
+    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+  } catch (error) {
+    return ContentService.createTextOutput("Error: " + error.message).setMimeType(ContentService.MimeType.TEXT);
+  }
 }
 
-  function createPicker() {
-    gapi.load('picker', () => {
-      const picker = new google.picker.PickerBuilder()
-        .addView(google.picker.ViewId.DOCS)
-        .setOAuthToken(oauthToken)
-        .setDeveloperKey('AIzaSyD8hkWd4F95de3SL-uT31CE5-c9VTKgIWY')
-        .setCallback(pickerCallback)
-        .build();
-      picker.setVisible(true);
-    });
+function getOrCreateFolder(parent, name) {
+  const folders = parent.getFoldersByName(name);
+  return folders.hasNext() ? folders.next() : parent.createFolder(name);
+}
+
+function findOrCreateSheet(folder) {
+  const files = folder.getFilesByName(SPREADSHEET_NAME);
+  if (files.hasNext()) {
+    return SpreadsheetApp.open(files.next());
+  } else {
+    const sheetFile = SpreadsheetApp.create(SPREADSHEET_NAME);
+    const file = DriveApp.getFileById(sheetFile.getId());
+    folder.addFile(file);
+    DriveApp.getRootFolder().removeFile(file);
+    const sheet = sheetFile.getSheets()[0];
+    sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Project Name", "Project Details", "Drawing File Link", "Folder Link"]);
+    return sheetFile;
   }
-
-  function pickerCallback(data) {
-    if (data.action === google.picker.Action.PICKED) {
-      const file = data.docs[0];
-      document.getElementById('driveFileId').value = file.id;
-      document.getElementById('driveFileName').value = file.name;
-      document.getElementById('fileInfo').textContent = `✔ Selected: ${file.name}`;
-    }
-  }
-
-  document.getElementById('quoteForm').addEventListener('submit', async function (e) {
-    e.preventDefault();
-    const form = this;
-    const progress = document.getElementById('progressBar');
-    const progressContainer = document.getElementById('progressBarContainer');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusText = document.getElementById('formStatus');
-
-    function updateProgress(percent, color = 'bg-blue-600', text = '') {
-      progress.style.width = percent + '%';
-      progress.className = `h-full ${color} rounded-full text-white text-sm text-center leading-5 transition-all duration-500`;
-      progress.textContent = text || `${percent}%`;
-    }
-
-    function animateProgress(targetPercent, duration = 1000, finalColor = 'bg-blue-600', finalText = '') {
-      let startPercent = 0;
-      const increment = 1;
-      const interval = duration / (targetPercent / increment);
-      const animation = setInterval(() => {
-        startPercent += increment;
-        updateProgress(startPercent);
-        if (startPercent >= targetPercent) {
-          clearInterval(animation);
-          if (finalColor !== 'bg-blue-600' || finalText) {
-            updateProgress(targetPercent, finalColor, finalText);
-          }
-        }
-      }, interval);
-    }
-
-    progressContainer.classList.remove('hidden');
-    submitBtn.disabled = true;
-    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-    statusText.textContent = '';
-    updateProgress(0);
-    animateProgress(50);
-
-    const formData = new FormData(form);
-    const encoded = new URLSearchParams(formData);
-    const res = await fetch("https://script.google.com/macros/s/AKfycbxzfkrFFgFZFF177bjePCzbGkpJsmdrJDYyTuKKLZZZo2jM46mx34ZD3rJvY1sVunLF/exec", {
-      method: 'POST',
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: encoded
-    });
-
-    const text = await res.text();
-    if (text.includes("Success")) {
-      animateProgress(100, 800, 'bg-green-600', '100%');
-      statusText.textContent = "✅ Submission successful! We'll be in touch soon.";
-      statusText.className = 'text-green-600 text-center mt-4 text-sm';
-      form.reset();
-      setTimeout(() => progressContainer.classList.add('hidden'), 3000);
-      document.getElementById('fileInfo').textContent = '';
-    } else {
-      animateProgress(100, 500, 'bg-red-600', 'Error');
-      statusText.textContent = "❌ Submission failed. Please try again.";
-      statusText.className = 'text-red-600 text-center mt-4 text-sm';
-    }
-
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    }, 1500);
-  });
-</script>
-
+}
