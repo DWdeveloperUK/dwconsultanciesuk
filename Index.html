@@ -479,19 +479,19 @@
 <script>
   let oauthToken;
   function openPicker() {
-    gapi.load('auth', () => {
-      gapi.auth.authorize({
-        'client_id': '232026509988-4td7g9go13ihu7ndv64saeceovj8ef6n.apps.googleusercontent.com',
-        'scope': ['https://www.googleapis.com/auth/drive.file'],
-        'immediate': false
-      }, authResult => {
-        if (authResult && !authResult.error) {
-          oauthToken = authResult.access_token;
-          createPicker();
-        }
+  gapi.load('client:auth2', () => {
+    gapi.auth2.init({
+      client_id: '232026509988-4td7g9go13ihu7ndv64saeceovj8ef6n.apps.googleusercontent.com',
+      scope: 'https://www.googleapis.com/auth/drive.file'
+    }).then(() => {
+      const authInstance = gapi.auth2.getAuthInstance();
+      authInstance.signIn().then(user => {
+        oauthToken = user.getAuthResponse().access_token;
+        createPicker();
       });
     });
-  }
+  });
+}
 
   function createPicker() {
     gapi.load('picker', () => {
