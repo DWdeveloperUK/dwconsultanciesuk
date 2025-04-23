@@ -475,7 +475,14 @@
 </section>
 
 <!-- Picker API Script -->
-<script src="https://apis.google.com/js/api.js"></script>
+<script>
+  function onApiLoad() {
+    gapi.load('client:auth2', () => {});
+    gapi.load('picker', () => {});
+  }
+</script>
+<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+
 <script>
   let oauthToken;
   function openPicker() {
