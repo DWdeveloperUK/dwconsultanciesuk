@@ -597,7 +597,10 @@
 
                     const res = await fetch("https://script.google.com/macros/s/AKfycbwrJVJTiiqvfvh2Psu7WSRYbkQ39gG60664bhAHWXuFbL80RJeUV7cuHRmPsvCQAJe2/exec", {
                         method: 'POST',
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        mode: 'no-cors',
+                        headers: { 
+                            "Content-Type": "application/x-www-form-urlencoded" 
+                        },
                         body: encoded
                     });
 
