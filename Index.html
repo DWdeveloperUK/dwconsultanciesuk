@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>DW CONSULTANCIES - Construction Management</title>
+  
+  <!-- Facebook App Browser Optimization -->
+  <meta property="og:title" content="DW CONSULTANCIES - Construction Management">
+  <meta property="og:description" content="Delivering excellence in construction management and cost services across the UK">
+  <meta property="og:image" content="https://iili.io/3IkTHc7.jpg">
+  <meta property="og:url" content="https://dwconsultancies.com">
+  <meta name="facebook-domain-verification" content="your_domain_verification_code_here">
+  
+  <!-- Force external browser for better compatibility -->
+  <script>
+    // Detect Facebook in-app browser and suggest opening in external browser
+    if (navigator.userAgent.includes('FBAN') || navigator.userAgent.includes('FBAV')) {
+      // Facebook in-app browser detected
+      console.log('Facebook in-app browser detected');
+    }
+  </script>
   <link rel="icon" href="https://iili.io/3IkTHc7.jpg" type="image/jpeg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -157,6 +173,14 @@
 	
 </head>
 <body class="bg-gray-100">
+
+<!-- Facebook Browser Warning -->
+<div id="facebook-warning" class="hidden fixed top-0 left-0 w-full bg-yellow-500 text-black p-4 z-50 text-center">
+    <p class="mb-2">For the best experience, please open this website in your default browser.</p>
+    <button id="open-in-browser" class="bg-blue-600 text-white px-4 py-2 rounded mr-2">Open in Browser</button>
+    <button id="dismiss-warning" class="bg-gray-600 text-white px-4 py-2 rounded">Continue Anyway</button>
+</div>
+
 <!-- Full content restored below this line -->
 <!-- Mobile Menu Overlay -->
 <div id="overlay"></div>
@@ -549,6 +573,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Facebook Browser Detection and Handling
+            function detectFacebookBrowser() {
+                const ua = navigator.userAgent;
+                return ua.includes('FBAN') || ua.includes('FBAV') || ua.includes('Instagram') || 
+                       (ua.includes('Mobile') && ua.includes('Facebook'));
+            }
+
+            if (detectFacebookBrowser()) {
+                const warning = document.getElementById('facebook-warning');
+                warning.classList.remove('hidden');
+                
+                document.getElementById('open-in-browser').addEventListener('click', () => {
+                    // Try to open in external browser
+                    window.open(window.location.href, '_system');
+                    // Fallback: show instructions
+                    setTimeout(() => {
+                        alert('Please tap the three dots (⋯) in the top right corner and select "Open in Browser" or "Open in Safari/Chrome"');
+                    }, 1000);
+                });
+                
+                document.getElementById('dismiss-warning').addEventListener('click', () => {
+                    warning.style.display = 'none';
+                });
+            }
+
             const form = document.getElementById('quoteForm');
             const progress = document.getElementById('progressBar');
             const progressContainer = document.getElementById('progressBarContainer');
